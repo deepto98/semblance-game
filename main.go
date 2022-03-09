@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 type ImageGame struct {
@@ -22,6 +24,10 @@ type ImageGame struct {
 }
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 	port := os.Getenv("PORT")
 
 	if port == "" {
@@ -86,7 +92,7 @@ func main() {
 							Lives:         lives,
 							LivesAsHearts: strings.Repeat("❤️", lives),
 							TotalGuesses:  totalGuesses,
-							Accuracy:      (score / totalGuesses) * 100,
+							Accuracy:      int(float64(score) / float64(totalGuesses) * 100),
 						}
 					scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
 					scoreTemplate.Execute(w, data)
