@@ -1,6 +1,7 @@
 [![Semblance](https://github.com/deepto98/semblance-game/blob/main/resources/semblance-logo.png?raw=true)](https://github.com/deepto98/semblance-game)
 
-Semblance is a web based game, where you see an image, and have to describe it in a word.
+Semblance is a web based game, where you see an image, and have to describe it in a word. <br>
+Link : https://semblance-game.herokuapp.com/
 
 ![Screenshot](https://github.com/deepto98/semblance-game/blob/main/resources/semblance-screenshot.jpg?raw=true)
 
