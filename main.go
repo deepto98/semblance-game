@@ -72,19 +72,19 @@ func main() {
 			var data ImageGame
 
 			if statusOfAnswer == "correctResponse" || statusOfAnswer == "incorrectResponsesExhausted" {
-				// if statusOfAnswer == "incorrectResponsesExhausted" && lives == 0 {
-				data =
-					ImageGame{
-						Score:         score,
-						Lives:         lives,
-						LivesAsHearts: strings.Repeat("❤️", lives),
-						TotalGuesses:  totalGuesses,
-						Accuracy:      (score / totalGuesses) * 100,
-					}
-				scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
-				scoreTemplate.Execute(w, data)
-				return
-				// }
+				if statusOfAnswer == "incorrectResponsesExhausted" && lives == 0 {
+					data =
+						ImageGame{
+							Score:         score,
+							Lives:         lives,
+							LivesAsHearts: strings.Repeat("❤️", lives),
+							TotalGuesses:  totalGuesses,
+							Accuracy:      (score / totalGuesses) * 100,
+						}
+					scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
+					scoreTemplate.Execute(w, data)
+					return
+				}
 
 				resp, _ := http.Get("https://random.imagecdn.app/1024/600")
 				newurl := resp.Request.URL.String()
