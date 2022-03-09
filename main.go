@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -20,6 +22,11 @@ type ImageGame struct {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
 	fs := http.FileServer(http.Dir("resources/Semblance Game_files"))
 	http.Handle("/Semblance Game_files/", http.StripPrefix("/Semblance Game_files/", fs))
@@ -140,5 +147,5 @@ func main() {
 		}
 
 	})
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":"+port, nil)
 }
