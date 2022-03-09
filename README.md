@@ -9,7 +9,7 @@ Semblance is a web based game, where you see an image, and have to describe it i
 - Golang to create the server, run the game, use external APIs and for HTML templating
 - [Random Image API](https://random.imagecdn.app/) to fetch a random image via a http request 
 - Azure Cognitive Services' [Computer Vision API](https://docs.microsoft.com/en-us/azure/cognitive-services/computer-vision/) to generate tags for each image
-
+- For the UI, I used Webflow, much improvement is needed there though 😂 
 ## Local Installation
 1. To run Semblance locally, you must have access to an Azure Computer Vision instance, you can create one from [here](https://portal.azure.com/#create/Microsoft.CognitiveServicesComputerVision)
 Once created, get the API Key and Endpoint from **Resource Management > Keys and Endpoint**
