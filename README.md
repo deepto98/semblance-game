@@ -24,6 +24,11 @@ Once created, get the API Key and Endpoint from **Resource Management > Keys and
     # Add the Computer Vision endpoint here
     COMPUTER_VISION_ENDPOINT=https://sampleapp.cognitiveservices.azure.com
     ```
+5. Install dependencies 
+    ```
+    go mod tidy
+    ```
+
 5. Build and run the app
     ```
     go build .
