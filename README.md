@@ -1,7 +1,9 @@
 [![Semblance](https://github.com/deepto98/semblance-game/blob/main/resources/semblance-logo.png?raw=true)](https://github.com/deepto98/semblance-game)
+
 Semblance is a web based game, where you see an image, and have to describe it in a word.
 
 <img src="https://user-images.githubusercontent.com/91651033/157409727-9a358086-49aa-4149-8079-f8348ac11027.jpg" width="600" height="320">
+
 ## Stack 
 
 - Golang to create the server, run the game, use external APIs and for HTML templating
