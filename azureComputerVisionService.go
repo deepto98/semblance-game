@@ -31,7 +31,7 @@ func CreateComputerVisionClient() computervision.BaseClient {
 
 }
 
-func TagRemoteImage(client computervision.BaseClient, remoteImageURL string) map[string]bool {
+func TagRemoteImage(client computervision.BaseClient, remoteImageURL string) map[string]int {
 
 	var remoteImage computervision.ImageURL
 	remoteImage.URL = &remoteImageURL
@@ -44,13 +44,15 @@ func TagRemoteImage(client computervision.BaseClient, remoteImageURL string) map
 		log.Fatal(err)
 	}
 
-	mymap := make(map[string]bool)
+	mymap := make(map[string]int)
 
 	if len(*remoteImageTags.Tags) == 0 {
 		// fmt.Println("No tags detected.")
 	} else {
+		i := 1
 		for _, tag := range *remoteImageTags.Tags {
-			mymap[*tag.Name] = true
+			mymap[*tag.Name] = i
+			i++
 			fmt.Printf("'%v' with confidence %.2f%%\n", *tag.Name, *tag.Confidence*100)
 		}
 	}

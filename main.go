@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -23,7 +24,10 @@ type ImageGame struct {
 	Accuracy                int
 }
 
+var myCache CacheItf
+
 func main() {
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
@@ -33,6 +37,7 @@ func main() {
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
+	InitCache() // comment if want to use redis cache
 
 	fs := http.FileServer(http.Dir("resources/Semblance Game_files"))
 	http.Handle("/Semblance Game_files/", http.StripPrefix("/Semblance Game_files/", fs))
@@ -43,6 +48,7 @@ func main() {
 		if r.Method == "GET" {
 			resp, _ := http.Get("https://random.imagecdn.app/1024/600")
 			url := resp.Request.URL.String()
+
 			data :=
 				ImageGame{
 					StatusOfAnswer:          "nonAnswer",
@@ -79,25 +85,22 @@ func main() {
 			statusOfAnswer := r.FormValue("statusOfAnswer")
 			guess := r.FormValue("guess")
 
-			//Call Cognitive Services API
-			currentTags := TagRemoteImage(CreateComputerVisionClient(), url)
-
 			var data ImageGame
 
+			if statusOfAnswer == "incorrectResponsesExhausted" && lives == 0 {
+				data =
+					ImageGame{
+						Score:         score,
+						Lives:         lives,
+						LivesAsHearts: strings.Repeat("❤️", lives),
+						TotalGuesses:  totalGuesses,
+						Accuracy:      int(float64(score) / float64(totalGuesses) * 100),
+					}
+				scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
+				scoreTemplate.Execute(w, data)
+				return
+			}
 			if statusOfAnswer == "correctResponse" || statusOfAnswer == "incorrectResponsesExhausted" {
-				if statusOfAnswer == "incorrectResponsesExhausted" && lives == 0 {
-					data =
-						ImageGame{
-							Score:         score,
-							Lives:         lives,
-							LivesAsHearts: strings.Repeat("❤️", lives),
-							TotalGuesses:  totalGuesses,
-							Accuracy:      int(float64(score) / float64(totalGuesses) * 100),
-						}
-					scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
-					scoreTemplate.Execute(w, data)
-					return
-				}
 
 				resp, _ := http.Get("https://random.imagecdn.app/1024/600")
 				newurl := resp.Request.URL.String()
@@ -111,42 +114,87 @@ func main() {
 						ConsecutiveWrongAnswers: 0,
 						TotalGuesses:            totalGuesses + 1,
 					}
-
-			} else if currentTags[strings.ToLower(guess)] {
-				data =
-					ImageGame{
-						CurrentImageSource: url,
-						Score:              score + 1,
-						StatusOfAnswer:     "correct",
-						Lives:              lives,
-						LivesAsHearts:      strings.Repeat("❤️", lives),
-
-						ConsecutiveWrongAnswers: 0,
-						TotalGuesses:            totalGuesses + 1,
-					}
 			} else {
-				var answer string
+				tagsFromCache, err := myCache.Get(url)
+				var currentTags map[string]int
+				json.Unmarshal(tagsFromCache, &currentTags)
 
-				if consecutiveWrongAnswers == 2 {
-					lives--
-					//Get answer
-					//get the first key, since that has the highest confidence
-					for key, _ := range currentTags {
-						answer = key
+				if err != nil {
+					// error
+					log.Fatal(err)
+				}
+				if currentTags == nil {
+					currentTags = TagRemoteImage(CreateComputerVisionClient(), url)
+					myCache.Set(url, currentTags, -1)
+				}
+				guess = strings.ToLower(guess)
+				acceptableAnswers := getWordForms(guess)
+
+				answerFound := false
+				for _, acceptableAnswer := range acceptableAnswers {
+
+					if currentTags[acceptableAnswer] > 0 {
+						answerFound = true
 						break
 					}
+
 				}
-				data =
-					ImageGame{
-						CurrentImageSource:      url,
-						Score:                   score,
-						StatusOfAnswer:          "incorrect",
-						Lives:                   lives,
-						LivesAsHearts:           strings.Repeat("❤️", lives),
-						ConsecutiveWrongAnswers: consecutiveWrongAnswers + 1,
-						TotalGuesses:            totalGuesses + 1,
-						Answer:                  answer,
+				if !answerFound {
+					for currentTag := range currentTags {
+
+						for _, acceptableAnswer := range acceptableAnswers {
+
+							if checkEitherIsSubString(currentTag, acceptableAnswer) {
+								answerFound = true
+								break
+							}
+
+						}
 					}
+				}
+
+				if answerFound {
+					data =
+						ImageGame{
+							CurrentImageSource: url,
+							Score:              score + 1,
+							StatusOfAnswer:     "correct",
+							Lives:              lives,
+							LivesAsHearts:      strings.Repeat("❤️", lives),
+
+							ConsecutiveWrongAnswers: 0,
+							TotalGuesses:            totalGuesses + 1,
+						}
+				}
+				if !answerFound {
+					var answer string
+
+					if consecutiveWrongAnswers == 2 {
+						lives--
+						//Get answer
+						//get the first key, since that has the highest confidence
+						for key, pos := range currentTags {
+							if pos == 1 {
+								answer = key
+								break
+							}
+
+						}
+					}
+
+					data =
+						ImageGame{
+							CurrentImageSource:      url,
+							Score:                   score,
+							StatusOfAnswer:          "incorrectResponse",
+							Lives:                   lives,
+							LivesAsHearts:           strings.Repeat("❤️", lives),
+							ConsecutiveWrongAnswers: consecutiveWrongAnswers + 1,
+							TotalGuesses:            totalGuesses + 1,
+							Answer:                  answer,
+						}
+				}
+
 			}
 
 			gameTemplate.Execute(w, data)
