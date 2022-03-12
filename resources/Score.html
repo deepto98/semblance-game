@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0039)https://semblance-game.webflow.io/score -->
 <html
   data-wf-domain="semblance-game.webflow.io"
   data-wf-page="62270caae64c92e6bd0965b0"
@@ -220,7 +219,7 @@
       url : "https://semblance-game.herokuapp.com/"
     }
     btn.onclick = () => {
-      if (navigator.share !== undefined) {
+      if (navigator.userAgentData.mobile && navigator.share !== undefined) {
         navigator
           .share(shareData)
           .then(() => console.log("Shared!"))
