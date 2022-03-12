@@ -776,6 +776,10 @@ textarea.w-select {
   display: none !important;
 }
 @media screen and (max-width: 991px) {
+  .div-block {
+    margin-top: 400px;
+    margin-left: 3%;
+  }
   .w-container {
     max-width: 728px;
   }
@@ -1821,6 +1825,10 @@ textarea.w-select {
   position: static;
 }
 @media screen and (max-width: 991px) {
+  .div-block {
+    margin-top: 400px;
+    margin-left: 3%;
+  }
   .w-nav[data-collapse='medium'] .w-nav-menu {
     display: none;
   }
@@ -2288,7 +2296,7 @@ textarea.w-select {
 
 .submit-button-2 {
   display: block;
-  margin-top: 16px;
+  margin-top: 5px;
   margin-left: 0px;
   border-radius: 200px;
   background-color: rgba(0, 0, 0, 0.45);
@@ -2683,11 +2691,12 @@ textarea.w-select {
 }
 
 .div-block {
+  margin-top: -1%;
+  margin-left: -5%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 86px;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
@@ -2761,6 +2770,10 @@ textarea.w-select {
 }
 
 @media screen and (max-width: 991px) {
+  .div-block {
+    margin-top: 450px;
+    margin-left: 3%;
+  }
   .centered-container {
     max-width: 1200px;
     padding-right: 20px;
@@ -2814,7 +2827,7 @@ textarea.w-select {
 
   .field-label-2 {
     margin-top: 4px;
-    margin-bottom: 13px;
+    margin-bottom: -15px;
   }
 
   .list-2 {
@@ -2930,7 +2943,7 @@ textarea.w-select {
   }
 
   .form-2 {
-    margin-top: -22px;
+    margin-top: -59px;
     margin-bottom: 0px;
     -webkit-box-align: center;
     -webkit-align-items: center;
@@ -3108,6 +3121,10 @@ textarea.w-select {
 }
 
 @media screen and (max-width: 479px) {
+  .about-image-left-section svg{
+    padding-left: 10% !important;
+    padding-right: 5% !important;
+}
   #w-node-_6e86b70e-c6cf-6c61-c685-8ea738da9efb-bd0965b0 {
     -ms-grid-column: span 1;
     grid-column-start: span 1;
@@ -3118,4 +3135,7 @@ textarea.w-select {
     -ms-grid-row-span: 1;
     grid-row-end: span 1;
   }
+}
+input{
+  text-align: center;
 }

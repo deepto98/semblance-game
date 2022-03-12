@@ -2876,6 +2876,10 @@ align-items: center;
 }
 
 @media screen and (max-width: 479px) {
+  .about-image-left-section svg{
+    padding-left: 10% !important;
+    padding-right: 5% !important;
+}
   .about-image-left-section {
     padding-bottom: 0px;
   }
