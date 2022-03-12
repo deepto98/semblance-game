@@ -87,19 +87,6 @@ func main() {
 
 			var data ImageGame
 
-			if statusOfAnswer == "incorrectResponsesExhausted" && lives == 0 {
-				data =
-					ImageGame{
-						Score:         score,
-						Lives:         lives,
-						LivesAsHearts: strings.Repeat("❤️", lives),
-						TotalGuesses:  totalGuesses,
-						Accuracy:      int(float64(score) / float64(totalGuesses) * 100),
-					}
-				scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
-				scoreTemplate.Execute(w, data)
-				return
-			}
 			if statusOfAnswer == "correctResponse" || statusOfAnswer == "incorrectResponsesExhausted" {
 
 				resp, _ := http.Get("https://random.imagecdn.app/1024/600")
@@ -180,6 +167,19 @@ func main() {
 							}
 
 						}
+					}
+					if lives == 0 {
+						data =
+							ImageGame{
+								Score:         score,
+								Lives:         lives,
+								LivesAsHearts: strings.Repeat("❤️", lives),
+								TotalGuesses:  totalGuesses,
+								Accuracy:      int(float64(score) / float64(totalGuesses) * 100),
+							}
+						scoreTemplate := template.Must(template.ParseFiles("resources/Score.html"))
+						scoreTemplate.Execute(w, data)
+						return
 					}
 
 					data =

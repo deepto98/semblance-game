@@ -13,12 +13,12 @@
         outline: none;
       }
     </style>
-    <title>Score</title>
+    <title>🤩 S e m b l a n c e 🤩</title>
     <meta content="Score" property="og:title" />
     <meta content="Score" property="twitter:title" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="Webflow" name="generator" />
-    <script src="./Semblance Game_files/github-button.js"></script>
+    <script src="./Semblance Game_files/github-button.js" defer></script>
 
     <link
       href="./Semblance Game_files/semblance-game.webflow.498647b0b.css"
@@ -55,12 +55,12 @@
       })(window, document)
     </script>
     <link
-      href="https://uploads-ssl.webflow.com/62260fce452b323053694718/62274ef212cbc971246ec0d6_Screenshot%202022-03-08%20174830new32.ico"
+      href="icon.ico"
       rel="shortcut icon"
       type="image/x-icon"
     />
     <link
-      href="https://uploads-ssl.webflow.com/img/webclip.png"
+    href="icon.ico"
       rel="apple-touch-icon"
     />
   </head>
@@ -129,7 +129,7 @@
     <div class="container-3 w-container">
       <ul role="list" class="list-4">
         <li>
-          <div><h1 class="heading-7">Score &nbsp;{{.Score}}</h1></div>
+          <div><h1 class="heading-7">Score &nbsp;<p id="score">{{.Score}}</p></h1></div>
         </li>
         <li>
           <div class="w-layout-grid grid-2">
@@ -170,7 +170,6 @@
             </a>
             <a
               id="w-node-a365fd6c-6e70-8095-4cab-c3979327fd85-bd0965b0"
-              href="https://semblance-game.webflow.io/score#"
               class="button-2 w-button"
             >
               Share
@@ -193,7 +192,48 @@
       type="text/javascript"
     >
   </script>
+  <script>
+    const title = document.title;
+    const url = window.location.href;
+    const btn = document.getElementById("w-node-a365fd6c-6e70-8095-4cab-c3979327fd85-bd0965b0");
+    let score = parseInt(document.getElementById("score").innerText);
+    let smiley = "🤗"
+    if(score <= 5){
+      smiley ="🤕"
+    }
+    else if(score <= 15){
+      smiley="🙂"
+    }
+    else if(score <= 15){
+      smiley="🙂"
+    }
+    else if(score <= 25){
+      smiley="🤩"
+    }
+    else{
+      smiley="😎"
+    }
+    let shareableText = 'Semblance - '+score+' - '+smiley
+    const shareData = {
+      title: 'Semblance',
+      text: shareableText,
+      url : "https://semblance-game.herokuapp.com/"
+    }
+    btn.onclick = () => {
+      if (navigator.share !== undefined) {
+        navigator
+          .share(shareData)
+          .then(() => console.log("Shared!"))
+          .catch(err => console.error(err));
+      } else {
+        navigator.clipboard.writeText(shareableText);
+        document.getElementById("w-node-a365fd6c-6e70-8095-4cab-c3979327fd85-bd0965b0").innerText = "Copied"
+     }
+    };
 
+
+
+</script>
     <!--[if lte IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script>
     <![endif]-->
